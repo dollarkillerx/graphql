@@ -140,10 +140,10 @@ query xxxx {
 }
 
 func TestSend3(t *testing.T) {
-	client := NewClient("http://xxxx:9998/api/graphql")
+	client := NewClient("http://xxx:9998/api/graphql")
 	client.debug = true
 
-	token := "Bearer xxxxx"
+	token := "Bearer xxxx"
 
 	client = client.NewRequest(`
 		query InstitutionalInvestor(
@@ -218,17 +218,28 @@ func TestSend3(t *testing.T) {
 		}
 	`)
 
-	client.variables = map[string]interface{}{
-		"entityID":   "2000435437",
-		"entityType": "ORGANIZATION",
-		"first":      10,
-		"orders": []interface{}{
-			map[string]interface{}{
-				"columnID": "closed_on",
-				"isDesc":   true,
-			},
+	//client.variables = map[string]interface{}{
+	//	"entityID":   "2000435437",
+	//	"entityType": "ORGANIZATION",
+	//	"first":      10,
+	//	"orders": []interface{}{
+	//		map[string]interface{}{
+	//			"columnID": "closed_on",
+	//			"isDesc":   true,
+	//		},
+	//	},
+	//}
+
+	client.Var("entityID","2000435437")
+	client.Var("entityType","ORGANIZATION")
+	client.Var("first",10)
+	client.Var("orders",[]interface{}{
+		map[string]interface{}{
+			"columnID": "closed_on",
+			"isDesc":   true,
 		},
-	}
+	})
+
 	body, err := client.
 		Header("OAuth", token).
 		Body()

@@ -29,7 +29,7 @@ type Client struct {
 	data []byte
 
 	debug     bool
-	variables interface{}
+	variables map[string]interface{}
 	timeout   time.Duration
 }
 
@@ -51,6 +51,7 @@ func NewClient(addr string) *Client {
 		keysFormatting: map[string]string{},
 		header:         map[string]string{},
 		data:           []byte{},
+		variables:      map[string]interface{}{},
 		timeout:        time.Second * 3,
 	}
 }
@@ -63,6 +64,14 @@ func (g *Client) NewRequest(schema string) *Client {
 
 func (g *Client) Val(key string, val interface{}) *Client {
 	g.keys[key] = val
+	return g
+}
+
+func (g *Client) Var(key string, val interface{}) *Client {
+	if val != nil {
+		g.variables[key] = val
+	}
+
 	return g
 }
 
@@ -112,7 +121,7 @@ func (g *Client) formatting() {
 
 }
 
-func (g *Client) SetVariables(val interface{}) *Client {
+func (g *Client) SetVariables(val map[string]interface{}) *Client {
 	g.variables = val
 	return g
 }
