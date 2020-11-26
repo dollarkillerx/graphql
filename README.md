@@ -48,3 +48,103 @@ query xxxx {
 	}
 	log.Println(string(body))
 ```
+
+exp2:
+``` 
+client := NewClient("http://xxxx:9998/api/graphql")
+	client.debug = true
+
+	token := "Bearer xxxxx"
+
+	client = client.NewRequest(`
+		query InstitutionalInvestor(
+		  $entityID: String!
+			$entityType: EntityType!
+		  $first: MaybeInt32
+		  $after: MaybeString
+		  $last: MaybeInt32
+		  $before: MaybeString
+		  $orders: [OrderColumn]
+		) {
+		   InstitutionalInvestor(
+			entityID:  $entityID
+			entityType: $entityType
+		  ){
+			investments(
+			  first: $first
+			  after: $after
+			  last: $last
+			  before: $before
+			  orders: $orders
+			) {
+			  totalCount
+			  pageInfo{
+				hasPreviousPage
+				hasNextPage
+				startCursor
+				endCursor
+			  }
+			  edges{
+				cursor
+				node{
+				  closedOn
+				  investedAmount{
+					display
+				  }
+				  equityPercentage{
+					display
+				  }
+				  relatedDeal{
+					identifier{
+					  entity{
+						entityID
+					  }
+					  description
+					}
+					dealType
+				  }
+				  fundedOrg{
+					identifier{
+					  entity{
+						entityID
+					  }
+					  description
+					}
+				  }
+				  otherInvestors{
+					identifier{
+					  entity{
+						entityID
+					  }
+					  description
+					}
+					amount{
+					  amountIn10K
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	`)
+
+	client.variables = map[string]interface{}{
+		"entityID":   "2000435437",
+		"entityType": "ORGANIZATION",
+		"first":      10,
+		"orders": []interface{}{
+			map[string]interface{}{
+				"columnID": "closed_on",
+				"isDesc":   true,
+			},
+		},
+	}
+	body, err := client.
+		Header("OAuth", token).
+		Body()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(string(body))
+```

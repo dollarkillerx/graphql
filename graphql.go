@@ -5,14 +5,15 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/dollarkillerx/urllib"
 )
 
 type ReqData struct {
-	OperationName string   `json:"operationName"`
-	Variables     []string `json:"variables"`
-	Query         string   `json:"query"`
+	OperationName string      `json:"operationName"`
+	Variables     interface{} `json:"variables"`
+	Query         string      `json:"query"`
 }
 
 type Client struct {
@@ -27,12 +28,19 @@ type Client struct {
 	err  error
 	data []byte
 
-	debug bool
+	debug     bool
+	variables interface{}
+	timeout   time.Duration
 }
 
 func (g *Client) Debug() *Client {
 	g.debug = true
 	log.SetFlags(log.Llongfile | log.LstdFlags)
+	return g
+}
+
+func (g *Client) SetTimeout(timeout time.Duration) *Client {
+	g.timeout = timeout
 	return g
 }
 
@@ -43,6 +51,7 @@ func NewClient(addr string) *Client {
 		keysFormatting: map[string]string{},
 		header:         map[string]string{},
 		data:           []byte{},
+		timeout:        time.Second * 3,
 	}
 }
 
@@ -102,11 +111,17 @@ func (g *Client) formatting() {
 
 }
 
+func (g *Client) SetVariables(val interface{}) *Client {
+	g.variables = val
+	return g
+}
+
 func (g *Client) send() *Client {
 	g.formatting()
 	req := ReqData{
 		OperationName: getQueryID(g.scheam),
 		Query:         g.scheam,
+		Variables:     g.variables,
 	}
 
 	marshal, err := json.Marshal(req)
@@ -119,6 +134,7 @@ func (g *Client) send() *Client {
 		log.Println(string(marshal))
 	}
 	base := urllib.Post(g.addr).
+		SetTimeout(g.timeout).
 		SetHeader("Cache-Control", "no-cache").
 		SetHeader("Content-Type", "application/json")
 

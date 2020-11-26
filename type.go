@@ -34,6 +34,10 @@ func Marshal(h interface{}) (string, error) {
 func getQueryID(scheam string) string {
 	i1 := strings.Index(scheam, "query")
 	i2 := strings.Index(scheam, "{")
+	i3 := strings.Index(scheam, "(")
+	if i3 < i2 {
+		i2 = i3
+	}
 
 	return strings.TrimSpace(scheam[i1+5 : i2])
 }
