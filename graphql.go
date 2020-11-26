@@ -122,7 +122,11 @@ func (g *Client) formatting() {
 }
 
 func (g *Client) SetVariables(val map[string]interface{}) *Client {
-	g.variables = val
+	for k, v := range val {
+		if v != nil {
+			g.variables[k] = v
+		}
+	}
 	return g
 }
 
