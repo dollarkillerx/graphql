@@ -56,8 +56,9 @@ func NewClient(addr string) *Client {
 }
 
 func (g *Client) NewRequest(schema string) *Client {
-	g.scheam = schema
-	return g
+	p := *g
+	p.scheam = schema
+	return &p
 }
 
 func (g *Client) Val(key string, val interface{}) *Client {
