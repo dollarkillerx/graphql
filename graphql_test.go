@@ -140,10 +140,10 @@ query xxxx {
 }
 
 func TestSend3(t *testing.T) {
-	client := NewClient("http://180.96.8.140:9998/api/graphql")
+	client := NewClient("http://xxxxx:9998/api/graphql")
 	client.debug = true
 
-	token := "Bearer eyJhbGciOiJIUzUxMiIsImtpZCI6Imc4cTd5bXRzcDBna2Zvb2lhOTZibGJ6a3Y4YWpnbXM0IiwidHlwIjoiSldUIn0.eyJhdWQiOiJlYmVhODY4Mi0wY2JkLTRiOTgtYWQ2Yy0wNWFkM2NiOGU5ZWIiLCJleHAiOjE2Mzc3NDYyMjJ9.7vVRncYmenMx2sECiM0X87A82WQ2B5ivEyXjJKfFn70j9Ut3rTzf8za1FXFaLc19H6DhqbrvRxoS1Gl5-qa-MQ"
+	token := "Bearer xxxx"
 
 	client = client.NewRequest(`
 		query InstitutionalInvestor(
