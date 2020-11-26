@@ -2,10 +2,11 @@ package graphql
 
 import (
 	"encoding/json"
-	"github.com/dollarkillerx/urllib"
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/dollarkillerx/urllib"
 )
 
 type ReqData struct {
@@ -25,6 +26,14 @@ type Client struct {
 
 	err  error
 	data []byte
+
+	debug bool
+}
+
+func (g *Client) Debug() *Client {
+	g.debug = true
+	log.SetFlags(log.Llongfile | log.LstdFlags)
+	return g
 }
 
 func NewClient(addr string) *Client {
@@ -106,7 +115,9 @@ func (g *Client) send() *Client {
 		return g
 	}
 
-	log.Println(string(marshal))
+	if g.debug {
+		log.Println(string(marshal))
+	}
 	base := urllib.Post(g.addr).
 		SetHeader("Cache-Control", "no-cache").
 		SetHeader("Content-Type", "application/json")
@@ -118,6 +129,9 @@ func (g *Client) send() *Client {
 	httpCode, body, err := base.SetJson(marshal).ByteRetry(3)
 	if err != nil {
 		g.err = err
+		if g.debug {
+			log.Println(err)
+		}
 		return g
 	}
 

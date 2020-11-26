@@ -50,9 +50,8 @@ func TestSp(t *testing.T) {
 	log.Println(getQueryID(p))
 }
 
-
 func TestSend(t *testing.T) {
-	client := NewClient("http://180.96.8.140:9998/api/graphql")
+	client := NewClient("http://xxxx:9998/api/graphql")
 	body, err := client.NewRequest(`
 	query ivnestor {
   InstitutionalInvestor(entityID: "$entityID", entityType: ORGANIZATION) {
@@ -62,7 +61,7 @@ func TestSend(t *testing.T) {
   }
 }
 
-query ivnestor2 {
+query xxxx {
   InstitutionalInvestor(entityID: "$entityID", entityType: ORGANIZATION) {
     funds(first: 10) {
       totalCount
@@ -84,7 +83,7 @@ query ivnestor2 {
     }
   }
 }
-	`).Val("$entityID","2000383468").
+	`).Val("$entityID", "xxxx").
 		Header("OAuth", "Bearer eyJ").Body()
 	if err != nil {
 		log.Fatalln(err)
@@ -93,11 +92,11 @@ query ivnestor2 {
 }
 
 func TestSend2(t *testing.T) {
-	client := NewClient("http://180.96.8.140:9998/api/graphql")
+	client := NewClient("http://xxxx:9998/api/graphql")
 
 	// [{columnID: "closed_on", isDesc: true}]
 	p := []interface{}{
-		H{"columnID":"closed_on","isDesc":true},
+		H{"columnID": "closed_on", "isDesc": true},
 	}
 
 	body, err := client.NewRequest(`
@@ -109,7 +108,7 @@ func TestSend2(t *testing.T) {
   }
 }
 
-query ivnestor2 {
+query xxxx {
   InstitutionalInvestor(entityID: "$entityID", entityType: ORGANIZATION) {
     funds(first: 10) {
       totalCount
@@ -131,7 +130,7 @@ query ivnestor2 {
     }
   }
 }
-	`).Val("$entityID","2000383468").Val("$p",p).
+	`).Val("$entityID", "xxx").Val("$p", p).
 		Header("OAuth", "Bearer eyJhbGciOiJ").Body()
 	if err != nil {
 		log.Fatalln(err)
