@@ -3,11 +3,11 @@ simple graphql client
 
 exp:
 ```go
-client := NewClient("http://xxxx:9998/api/graphql")
+client := graphql.NewClient("http://xxxx:9998/api/graphql")
 
 	// [{columnID: "closed_on", isDesc: true}]
 	p := []interface{}{
-		H{"columnID": "closed_on", "isDesc": true},
+		graphql.H{"columnID": "closed_on", "isDesc": true},
 	}
 
 	body, err := client.NewRequest(`
@@ -50,9 +50,9 @@ query xxxx {
 ```
 
 exp2:
-``` 
-client := NewClient("http://xxxx:9998/api/graphql")
-	client.debug = true
+```go
+    client := graphql.NewClient("http://xxxx:9998/api/graphql")
+	client = client.Debug()
 
 	token := "Bearer xxxxx"
 
@@ -129,7 +129,7 @@ client := NewClient("http://xxxx:9998/api/graphql")
 		}
 	`)
 
-	client.variables = map[string]interface{}{
+	client.SetVariables(map[string]interface{}{
 		"entityID":   "2000435437",
 		"entityType": "ORGANIZATION",
 		"first":      10,
@@ -139,7 +139,9 @@ client := NewClient("http://xxxx:9998/api/graphql")
 				"isDesc":   true,
 			},
 		},
-	}
+	})
+
+
 	body, err := client.
 		Header("OAuth", token).
 		Body()
